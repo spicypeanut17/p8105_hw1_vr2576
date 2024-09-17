@@ -3,29 +3,86 @@ title: "P8105 Homework 1"
 author: "Vaiju Raja (vr2576)"
 date: "2024-09-17"
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+
 ```
+
 
 ## Problem 0.1
 
-```{r problem1}
+```{r problem0.1}
 
 summary(cars)
 plot(pressure)
 
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-
-plot(pressure)
+data <- read.csv("data.csv")
+filtered_data <- data %>%
+  filter(value > threshold)
 
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Problem 1
+
+```{r problem1}
+
+# Install the Palmer Penguins package
+#install.packages("palmerpenguins")
+
+# Load the dataset
+data("penguins", package = "palmerpenguins")
+penguins
+
+## The `penguins` dataset contains data on various measurements of penguins, including variables like `species`, `island`, `bill_length_mm`, and `flipper_length_mm`. 
+## The dataset has `r nrow(penguins)` rows and `r ncol(penguins)` columns.
+## The mean flipper length is `r mean(penguins$flipper_length_mm, na.rm = TRUE)` mm.
+
+
+## Scatterplot
+library(ggplot2)
+ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
+  geom_point() +
+  ggtitle("Scatterplot of Flipper Length vs Bill Length")
+ggsave("scatterplot_penguins.png")
+
+```
+**Answer: The `penguins` dataset contains data on various measurements of penguins, including variables like `species`, `island`, `bill_length_mm`, and `flipper_length_mm`. The dataset has `r nrow(penguins)` rows and `r ncol(penguins)` columns. The mean flipper length is `r mean(penguins$flipper_length_mm, na.rm = TRUE)` mm.**
+
+
+## Problem 2
+
+```{r problem2}
+
+library(dplyr)
+
+set.seed(123)
+
+# Create a data frame
+df <- data.frame(
+  numeric_var = rnorm(10), 
+  logical_var = rnorm(10) > 0, 
+  character_var = as.character(letters[1:10]), 
+  factor_var = factor(rep(c("Level1", "Level2", "Level3"), length.out = 10))
+)
+
+# Attempt to take the mean
+mean_numeric <- mean(df %>% pull(numeric_var))
+mean_logical <- mean(df %>% pull(logical_var))
+mean_character <- mean(df %>% pull(character_var))  # Does not work
+mean_factor <- mean(df %>% pull(factor_var))        # Does not work
+
+# Convert the variables
+as.numeric(df$logical_var)
+as.numeric(df$character_var)
+as.numeric(df$factor_var)
+
+
+```

@@ -105,5 +105,4 @@ as.numeric(df1$logical_var)
 as.numeric(df1$character_var)
 as.numeric(df1$factor_var)
 
-
 ```

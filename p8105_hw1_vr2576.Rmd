@@ -23,9 +23,9 @@ library(ggplot2)
 summary(cars)
 plot(pressure)
 
-data <- read.csv("data.csv")
-filtered_data <- data %>%
-  filter(value > threshold)
+#data <- read.csv("data.csv")
+#filtered_data <- data %>%
+#  filter(value > threshold)
 
 ```
 
@@ -41,20 +41,21 @@ filtered_data <- data %>%
 data("penguins", package = "palmerpenguins")
 penguins
 
-## The `penguins` dataset contains data on various measurements of penguins, including variables like `species`, `island`, `bill_length_mm`, and `flipper_length_mm`. 
-## The dataset has `r nrow(penguins)` rows and `r ncol(penguins)` columns.
-## The mean flipper length is `r mean(penguins$flipper_length_mm, na.rm = TRUE)` mm.
-
-
-## Scatterplot
+# Create a scatterplot
 library(ggplot2)
 ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
   geom_point() +
-  ggtitle("Scatterplot of Flipper Length vs Bill Length")
+  labs(
+    x = "Bill Length (mm)",
+    y = "Flipper Length (mm)",
+    title = "Scatterplot of Flipper Length vs Bill Length"
+  )
+
+# Save scatterplot
 ggsave("scatterplot_penguins.png")
 
 ```
-**Answer: The `penguins` dataset contains data on various measurements of penguins, including variables like `species`, `island`, `bill_length_mm`, and `flipper_length_mm`. The dataset has `r nrow(penguins)` rows and `r ncol(penguins)` columns. The mean flipper length is `r mean(penguins$flipper_length_mm, na.rm = TRUE)` mm.**
+The `penguins` dataset contains data on various measurements of penguins, including variables like `species`, `island`, `bill_length_mm`, and `flipper_length_mm`. The dataset has `r nrow(penguins)` rows and `r ncol(penguins)` columns. The mean flipper length is `r mean(penguins$flipper_length_mm, na.rm = TRUE)` mm.
 
 
 ## Problem 2
@@ -62,7 +63,6 @@ ggsave("scatterplot_penguins.png")
 ```{r problem2}
 
 library(dplyr)
-
 set.seed(123)
 
 # Create a data frame
@@ -76,13 +76,34 @@ df <- data.frame(
 # Attempt to take the mean
 mean_numeric <- mean(df %>% pull(numeric_var))
 mean_logical <- mean(df %>% pull(logical_var))
-mean_character <- mean(df %>% pull(character_var))  # Does not work
-mean_factor <- mean(df %>% pull(factor_var))        # Does not work
+mean_character <- mean(df %>% pull(character_var))  # Error
+mean_factor <- mean(df %>% pull(factor_var))        # Error
 
 # Convert the variables
 as.numeric(df$logical_var)
 as.numeric(df$character_var)
 as.numeric(df$factor_var)
+
+
+## Alternative Method - Tibble
+library(tibble)
+set.seed(123)
+
+df1 <- tibble(
+  random_sample = rnorm(10),
+  logical_var = rnorm(10) > 0,
+  character_var = sample(letters, 10),
+  factor_var = factor(sample(c("Level1", "Level2", "Level3"), 10, replace = TRUE))
+)
+
+mean(df1$random_sample) # Works
+mean(df1$logical_var) # Works (TRUE = 1, FALSE = 0)
+mean(df1$character_var) # Error
+mean(df1$factor_var) # Error
+
+as.numeric(df1$logical_var)
+as.numeric(df1$character_var)
+as.numeric(df1$factor_var)
 
 
 ```
